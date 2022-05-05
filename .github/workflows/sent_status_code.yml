@@ -2,7 +2,9 @@ name: "网站检测"
 
 on:
   schedule: # 定时运行
-    - cron: "0 9 * * *" # UTC时间9点，即北京时间17点
+    - cron: "52 * * * *" # 测试
+    # - cron: "0 9 * * *" # UTC时间9点，即北京时间17点
+    
 
 jobs:
   bot:
@@ -12,16 +14,16 @@ jobs:
         uses: actions/checkout@v1
       - name: "Get status"
         # 将 status code 设置到环境变量，参考https://docs.github.com/cn/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
-        run: echo "status_code = $(curl -sIL -w "%{http_code}" -o /dev/null https://test.com)" >> $GITHUB_ENV
+        run: echo "status_code = $(curl -sIL -w "%{http_code}" -m 30 -o /dev/null https://test.com)" >> $GITHUB_ENV
       - name: "Send mail"
         if: ${{ env.status_code != 200 }}
         uses: dawidd6/action-send-mail@master
         with:
-          server_address: smtp.163.com
+          server_address: smtp.126.com
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }} #使用加密变量，在项目的settings/secrets菜单设置。
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: 证书检测报告
           body: 访问 https://test.com 出错！
-          to: yukiweng11@163.com
+          to: yukiweng11@126.com
           from: GitHub Actions
