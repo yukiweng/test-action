@@ -27,6 +27,6 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }} #使用加密变量，在项目的settings/secrets菜单设置。
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: 证书检测报告
-          body: 访问 https://test.com 出错！状态码：${{env.status_code}}，检测时间：${{env.report_date}}
+          body: 访问 https://test.com 出错！状态码：${{toJSON(env.status_code)}}，检测时间：${{env.report_date}}
           to: yukiweng11@126.com
           from: GitHub Actions
