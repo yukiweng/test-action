@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: "Checkout codes"
         uses: actions/checkout@v1
+      - name: 'Get Date'
+        run: echo "report_date=$(TZ=':Asia/Beijing' date '+%Y-%m-%d %T')" >> $GITHUB_ENV
       - name: "Get status"
         # 将 status code 设置到环境变量，参考https://docs.github.com/cn/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
         run: echo "status_code = $(curl -sIL -w "%{http_code}" -m 30 -o /dev/null https://test.com)" >> $GITHUB_ENV
@@ -25,6 +27,6 @@ jobs:
           username: ${{ secrets.MAIL_USERNAME }} #使用加密变量，在项目的settings/secrets菜单设置。
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: 证书检测报告
-          body: 访问 https://test.com 出错！
+          body: 访问 https://test.com 出错！状态码：${{env.status_code}}，检测时间：${{env.report_date}}
           to: yukiweng11@126.com
           from: GitHub Actions
